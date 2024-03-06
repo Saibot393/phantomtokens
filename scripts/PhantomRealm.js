@@ -3,6 +3,8 @@ const cModuleName = "phantomtokens"
 
 const cModuleIcon = ["fa-solid", "fa-ghost"];
 
+const cLibWrapper = "lib-wrapper";
+
 const cModes = ["normal", "anchor", "unclickable", "phantom"];
 
 const cIcons = {
@@ -34,7 +36,12 @@ class SpookyFlags {
 	}
 	
 	static async setMode(pToken, pMode) {
-		await pToken?.setFlag(cModuleName, cSpookyModeF, Number(pMode));
+		if (!isNaN(pMode)) {
+			await pToken?.setFlag(cModuleName, cSpookyModeF, Number(pMode));
+		}
+		else {
+			await pToken?.setFlag(cModuleName, cSpookyModeF, Number(cModes.indexOf(pMode)));
+		}
 	}
 	
 	static async increaseMode(pToken) {
@@ -83,31 +90,74 @@ class SpookyRealmManager {
 				await game.settings.set(cModuleName, "spookyrealmactive", !game.settings.get(cModuleName, "spookyrealmactive"));
 				
 				vUpdateIcon();
-				
-				SpookyRealmManager.updateSpookyVision();
 			};
 			
 			vUpdateIcon();
 		}
 	}
 	
+	static addSpookyTokenHUD(pHUD, pHTML, pTokenData) {
+				let vButtonHTML = `<div class="control-icon" data-action="mount">
+									<i class="${cRideableIcon}"></i>
+							   </div>`;
+				
+				pHTML.find("div.col."+vButtonPosition).append(vButtonHTML);
+	}
+	
 	static updateSpookyVision() {
+		console.log(game.settings.get(cModuleName, "spookyrealmactive"));
+	}
+	
+	static spookyPatches() {
+		if (game.modules.get(cLibWrapper)?.active) {
+			//use lib wrapper to monkey patch
+		}
+		else {
+			//release the (spooky) monkeys
+		}
+	}
+	
+	static onpreUpdateToken(pToken, pChanges) {
+		if (!game.settings.get(cModuleName, "spookyrealmactive")) {
+			if (SpookyFlags.getModeName(pToken) == "anchor") {
+				delete pChanges.x;
+				delete pChanges.y;
+				delete pChanges.elevation;
+				delete pChanges.rotation;
+			}
+		}
+	}
+	
+	static async setModeofTokens(pMode, pTokens = canvas.tokens.controlled.map(pToken => pToken.document)) {
+		for (vToken of pTokens) {
+			await SpookyFlags.setMode(vToken, pMode);
+		};
 		
+		SpookyRealmManager.updateSpookyVision();
 	}
 }
 
 Hooks.on("renderSceneControls", (pApp, pHTML, pInfos) => {SpookyRealmManager.addSpookyRealmButton(pApp, pHTML, pInfos)});
 
+Hooks.on("renderTokenHUD", (pHUD, pHTML, pTokenData) => SpookyRealmManager.addSpookyTokenHUD(pHUD, pHTML, pTokenData));
+
+Hooks.on("preUpdateToken", (pToken, pChanges) => {SpookyRealmManager.onpreUpdateToken(pToken, pChanges)});
+
 Hooks.on("init", () => {
+	SpookyRealmManager.spookyPatches();
+	
 	game.settings.register(cModuleName, "spookyrealmactive", {
-		name: Translate("Settings.spookyrealmactive.name"),
-		hint: Translate("Settings.spookyrealmactive.descrp"),
 		scope: "world",
 		config: false,
 		type: Boolean,
 		default: false,
-		onChange : () => {console.log("test")}
+		onChange : () => {SpookyRealmManager.updateSpookyVision()}
 	}); 
+	
+	game.modules.get(cModuleName).api = {
+		flags : SpookyFlags,
+		setModeofTokens : SpookyRealmManager.setModeofTokens
+	}
 });
 
 //the reason this file is so spooky is found in line 4, spooooky
