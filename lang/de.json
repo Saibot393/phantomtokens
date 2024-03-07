@@ -1,54 +1,13 @@
 {
-	"droplet" : {
+	"phantomtokens" : {
 		"Titles" : {
-			"Transfer"						: "Transfer",
-			"Amount"						: "Menge",
-			"All"							: "Alles",
+			"togglePhantomVision"			: "Phantom Sicht umschalten",
 			
-			"accept"						: "Akzeptieren",
-			"abbort"						: "Abbrechen"
-		},
-		
-		"ChatMessages" : {
-			"ObjectTransfer" : {
-				"Item" : {
-					"Delete"				: "{UserName} hat einen Gegenstand von <b>{SourceName}</b> nach <b>{TargetName}</b> transferiert:",
-					"NoDelete"				: "{UserName} gab <b>{TargetName}</b> einen Gegenstand:"
-				}
-			}
-		},
-		
-		"Settings" : {
-			"TransferChatMessage" : {
-				"name"						: "Zeige Transfernachricht im Chat",
-				"descrp"					: "Ob eine bei Transfer eine Nachricht im Chat angezeigt werden soll, welche den Nutzer, den Ursprung, das Ziel und den Gegenstand erwähnt"
-			},
-			
-			"allowPlayerItemTransfer" : {
-				"name"						: "Erlaube Spielertransfer",
-				"descrp"					: "Ob und zu wem es Spielern erlaubt seien soll Gegenstände zu transferieren",
-				"options" : {
-					"no"					: "Nein",
-					"ownedonly"				: "Nur Eigene",
-					"playersonly"			: "Nur Spieler",
-					"friendliesonly"		: "Nur Befreundete",
-					"neutrals"				: "Neutrale und Befreundete"
-				}
-			},
-			
-			"deleteItemonTransfer" : {
-				"name"						: "Gegenstände beim Transfer löschen",
-				"descrp"					: "Ob Gegenstände welche von einem Inventar in ein anderes transferiert werden im Ursprungsinventar gelöscht werden sollen"
-			},
-			
-			"askTransferAmount" : {
-				"name"						: "Transfermenge erfragen",
-				"descrp"					: "Ob beim Transfer von mehr als einem Gegenstand die Menge erfragt werden soll [STRG zu drücken invertiert diese Einstellung]"
-			},
-			
-			"applytoSheetDrop" : {
-				"name"						: "EInstellungen auf Bogen Drops anwenden",
-				"descrp"					: "Ob die oberen Einstellungen auch für Drops auf Charakterbögen angewandt werden sollen"
+			"modes" : {
+				"normal.descrp"				: "Eine normale Figur",
+				"anchor.descrp"				: "Eine unbewegliche Figur",
+				"unclickable.descrp"		: "Eine nicht anklickbare Figur",
+				"phantom.descrp"			: "Eine unsichtbare Figur"
 			}
 		}
 	}

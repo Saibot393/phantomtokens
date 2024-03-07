@@ -115,7 +115,7 @@ class SpookyRealmManager {
 						
 						vIcon.classList.add(...cIcons[SpookyFlags.getModeName(vToken)]);
 						
-						vIcon.setAttribute("title", Translate("Titles..modes." + SpookyFlags.getModeName(vToken) + ".descrp"));
+						vIcon.setAttribute("title", Translate("Titles.modes." + SpookyFlags.getModeName(vToken) + ".descrp"));
 					}
 					
 					vButton.onclick = async (pEvent) => {

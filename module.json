@@ -1,7 +1,7 @@
 {
   "id": "phantomtokens",
-  "title": "Phantom Token",
-  "description": "A small module to allow player to drop items and effects on other players tokens",
+  "title": "Phantom Tokens",
+  "description": "A small module to disable certain token functions on a case by case basis",
   "authors": [
     {
     "name": "saibot"
@@ -30,11 +30,11 @@
   "esmodules": [
 	"scripts/PhantomRealm.js"
   ],
-  "url": "https://github.com/Saibot393/droplet",
-  "download": "https://github.com/Saibot393/droplet/archive/refs/tags/v1.1.1.zip",
-  "manifest": "https://github.com/Saibot393/droplet/releases/latest/download/module.json",
-  "readme": "https://github.com/Saibot393/droplet/blob/main/README.md",
-  "changelog": "https://github.com/Saibot393/droplet/blob/main/CHANGELOG.md",
-  "bugs": "https://github.com/Saibot393/droplet/issues",
+  "url": "https://github.com/Saibot393/phantomtokens",
+  "download": "https://github.com/Saibot393/phantomtokens/archive/refs/tags/v1.0.0.zip",
+  "manifest": "https://github.com/Saibot393/phantomtokens/releases/latest/download/module.json",
+  "readme": "https://github.com/Saibot393/phantomtokens/blob/main/README.md",
+  "changelog": "https://github.com/Saibot393/phantomtokens/blob/main/CHANGELOG.md",
+  "bugs": "https://github.com/Saibot393/phantomtokens/issues",
   "allowBugReporter": true
 }
