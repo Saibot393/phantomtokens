@@ -55,7 +55,7 @@ class SpookyFlags {
 	static async decreaseMode(pToken) {
 		let vMode = SpookyFlags.getMode(pToken);
 		
-		vMode = (vMode - 1) % cModes.length;
+		vMode = (cModes.length + vMode - 1) % cModes.length;
 		
 		await SpookyFlags.setMode(pToken, vMode);
 	}
@@ -97,39 +97,144 @@ class SpookyRealmManager {
 	}
 	
 	static addSpookyTokenHUD(pHUD, pHTML, pTokenData) {
-				let vButtonHTML = `<div class="control-icon" data-action="mount">
-									<i class="${cRideableIcon}"></i>
-							   </div>`;
-				
-				pHTML.find("div.col."+vButtonPosition).append(vButtonHTML);
-	}
-	
-	static updateSpookyVision() {
-		console.log(game.settings.get(cModuleName, "spookyrealmactive"));
-	}
-	
-	static spookyPatches() {
-		if (game.modules.get(cLibWrapper)?.active) {
-			//use lib wrapper to monkey patch
-		}
-		else {
-			//release the (spooky) monkeys
-		}
-	}
-	
-	static onpreUpdateToken(pToken, pChanges) {
-		if (!game.settings.get(cModuleName, "spookyrealmactive")) {
-			if (SpookyFlags.getModeName(pToken) == "anchor") {
-				delete pChanges.x;
-				delete pChanges.y;
-				delete pChanges.elevation;
-				delete pChanges.rotation;
+		let vToken = canvas.tokens.get(pTokenData._id)?.document;
+		
+		if (vToken) {
+			if (game.settings.get(cModuleName, "spookyrealmactive") || (SpookyFlags.getModeName(vToken) != "normal")) {
+				if (game.user.isGM) {
+					let vButton =  document.createElement("div");
+					vButton.classList.add("control-icon");
+					vButton.setAttribute("data-action", "changePahntomMode");
+					
+					let vIcon = document.createElement("i");
+					
+					vButton.appendChild(vIcon);
+					
+					let vUpdateIcon = () => {
+						vIcon.classList.forEach(vClass => vIcon.classList.remove(vClass));
+						
+						vIcon.classList.add(...cIcons[SpookyFlags.getModeName(vToken)]);
+						
+						vIcon.setAttribute("title", Translate("Titles..modes." + SpookyFlags.getModeName(vToken) + ".descrp"));
+					}
+					
+					vButton.onclick = async (pEvent) => {
+						if (game.settings.get(cModuleName, "spookyrealmactive")) {
+							await SpookyFlags.increaseMode(vToken);
+							
+							SpookyRealmManager.setModeofTokens(SpookyFlags.getModeName(vToken));
+							
+							vUpdateIcon();
+						}
+					}
+					
+					vButton.oncontextmenu = async (pEvent) => {
+						if (game.settings.get(cModuleName, "spookyrealmactive")) {
+							await SpookyFlags.decreaseMode(vToken);
+							
+							SpookyRealmManager.setModeofTokens(SpookyFlags.getModeName(vToken));
+							
+							vUpdateIcon();
+						}
+					}
+					
+					pHTML[0].querySelector("div.col.right").prepend(vButton);
+					
+					vUpdateIcon();
+				}
 			}
 		}
 	}
 	
+	static updateSpookyVision() {
+		canvas.tokens.activate();
+	}
+	
+	static spookyPatches() {
+		function canDrag(pToken) {
+			if (!game.settings.get(cModuleName, "spookyrealmactive")) {
+				return SpookyFlags.getModeName(pToken) != "anchor";
+			}
+			return true;
+		}
+		
+		function canControl(pToken) {
+			if (!game.settings.get(cModuleName, "spookyrealmactive")) {
+				return SpookyFlags.getModeName(pToken) != "unclickable";
+			}
+			return true;
+		}
+		
+		function canHover(pToken) {
+			if (!game.settings.get(cModuleName, "spookyrealmactive")) {
+				return SpookyFlags.getModeName(pToken) != "unclickable";
+			}
+			return true;
+		}
+		
+		function isVisible(pToken) {
+			if (!game.settings.get(cModuleName, "spookyrealmactive")) {
+				return SpookyFlags.getModeName(pToken) != "phantom";
+			}
+			return true;
+		}
+		
+		if (game.modules.get(cLibWrapper)?.active) {
+			//use lib wrapper to monkey patch
+			libWrapper.register(cModuleName, "Token.prototype._canDrag", function(vWrapped, ...args) {if (canDrag(this.document)) {return vWrapped(...args)} return false}, "MIXED");
+			
+			libWrapper.register(cModuleName, "Token.prototype._canControl", function(vWrapped, ...args) {if (canControl(this.document)) {return vWrapped(...args)} return false}, "MIXED");
+			
+			libWrapper.register(cModuleName, "Token.prototype._canHover", function(vWrapped, ...args) {if (canHover(this.document)) {return vWrapped(...args)} return false}, "MIXED");
+			
+			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {if (isVisible(this.document)) {return vWrapped(...args)} return false}, "MIXED");
+		}
+		else {
+			//release the (spooky) monkeys
+			const vOldDragCall = Token.prototype._canDrag;
+			Token.prototype._canDrag = function (...args) {
+				let vCallOld = canDrag(this.document);
+				
+				if (vCallOld) {
+					let vCallBuffer = vOldDragCall.bind(this);
+					return vCallBuffer(...args);
+				}
+			}
+			
+			const vOldControlCall = Token.prototype._canControl;
+			Token.prototype._canControl = function (...args) {
+				let vCallOld = canControl(this.document);
+				
+				if (vCallOld) {
+					let vCallBuffer = vOldControlCall.bind(this);
+					return vCallBuffer(...args);
+				}
+			}
+			
+			const vOldHoverCall = Token.prototype._canHover;
+			Token.prototype._canHover = function (...args) {
+				let vCallOld = canHover(this.document);
+				
+				if (vCallOld) {
+					let vCallBuffer = vOldHoverCall.bind(this);
+					return vCallBuffer(...args);
+				}
+			}
+			
+			const vOldVisibleCall = CONFIG.Token.objectClass.prototype.__lookupGetter__("isVisible");
+			CONFIG.Token.objectClass.prototype.__defineGetter__("isVisible", function (...args) {
+				let vCallOld = isVisible(this.document);
+				
+				if (vCallOld) {
+					let vCallBuffer = vOldVisibleCall.bind(this);
+					return vCallBuffer(...args);
+				}
+			});
+		}
+	}
+	
 	static async setModeofTokens(pMode, pTokens = canvas.tokens.controlled.map(pToken => pToken.document)) {
-		for (vToken of pTokens) {
+		for (let vToken of pTokens) {
 			await SpookyFlags.setMode(vToken, pMode);
 		};
 		
@@ -140,8 +245,6 @@ class SpookyRealmManager {
 Hooks.on("renderSceneControls", (pApp, pHTML, pInfos) => {SpookyRealmManager.addSpookyRealmButton(pApp, pHTML, pInfos)});
 
 Hooks.on("renderTokenHUD", (pHUD, pHTML, pTokenData) => SpookyRealmManager.addSpookyTokenHUD(pHUD, pHTML, pTokenData));
-
-Hooks.on("preUpdateToken", (pToken, pChanges) => {SpookyRealmManager.onpreUpdateToken(pToken, pChanges)});
 
 Hooks.on("init", () => {
 	SpookyRealmManager.spookyPatches();
