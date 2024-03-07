@@ -6,3 +6,11 @@ The following modes are available:
 - anchored: The token can not be dragged
 - unclickable: The token can not be interacted with
 - phantom: The token is invisible
+
+### Languages:
+
+The module contains an English, and a German translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/phantomtokens/issues).
+
+---
+
+**If you have suggestions, questions, or requests for additional features please [let me know](https://github.com/Saibot393/phantomtokens/issues).**
