@@ -5,4 +5,4 @@ The module adds a ghost toggle button to the token layer controls on the top rig
 The following modes are available:
 - anchored: The token can not be dragged
 - unclickable: The token can not be interacted with
-- phantom: The token well be invisible
+- phantom: The token is invisible
