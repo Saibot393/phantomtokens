@@ -9,6 +9,12 @@
 				"unclickable.descrp"		: "An unclickable token",
 				"phantom.descrp"			: "An invisible token"
 			}
+		},
+		
+		"Keys" : {
+			"TogglePhantomRealm.name"		: "Toggle phantom vision",
+			"IncreaseModeSelected.name"		: "Increase phantom mode of selected tokens",
+			"DecreaseModeSelected.name"		: "Decrease phantom mode of selected tokens"
 		}
 	}
 }

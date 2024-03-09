@@ -86,10 +86,12 @@ class SpookyRealmManager {
 				}
 			}
 			
+			this.SpookyIconupdate = vUpdateIcon;
+			
 			vButton.onclick = async (pEvent) => {
 				await game.settings.set(cModuleName, "spookyrealmactive", !game.settings.get(cModuleName, "spookyrealmactive"));
 				
-				vUpdateIcon();
+				//vUpdateIcon();
 			};
 			
 			vUpdateIcon();
@@ -148,6 +150,10 @@ class SpookyRealmManager {
 	
 	static updateSpookyVision() {
 		canvas.tokens.activate();
+	}
+	
+	static updateSpookyIcon() {
+		if (this.SpookyIconupdate) this.SpookyIconupdate();
 	}
 	
 	static spookyPatches() {
@@ -240,6 +246,22 @@ class SpookyRealmManager {
 		
 		SpookyRealmManager.updateSpookyVision();
 	}
+	
+	static async increaseModeofTokens(pTokens = canvas.tokens.controlled.map(pToken => pToken.document)) {
+		for (let vToken of pTokens) {
+			await SpookyFlags.increaseMode(vToken);
+		};
+		
+		SpookyRealmManager.updateSpookyVision();
+	}
+	
+	static async decreaseModeofTokens(pTokens = canvas.tokens.controlled.map(pToken => pToken.document)) {
+		for (let vToken of pTokens) {
+			await SpookyFlags.decreaseMode(vToken);
+		};
+		
+		SpookyRealmManager.updateSpookyVision();
+	}
 }
 
 Hooks.on("renderSceneControls", (pApp, pHTML, pInfos) => {SpookyRealmManager.addSpookyRealmButton(pApp, pHTML, pInfos)});
@@ -254,13 +276,37 @@ Hooks.on("init", () => {
 		config: false,
 		type: Boolean,
 		default: false,
-		onChange : () => {SpookyRealmManager.updateSpookyVision()}
+		onChange : () => {SpookyRealmManager.updateSpookyVision(); SpookyRealmManager.updateSpookyIcon()}
 	}); 
 	
 	game.modules.get(cModuleName).api = {
 		flags : SpookyFlags,
-		setModeofTokens : SpookyRealmManager.setModeofTokens
-	}
+		setModeofTokens : SpookyRealmManager.setModeofTokens,
+		increaseModeofTokens : SpookyRealmManager.increaseModeofTokens,
+		decreaseModeofTokens : SpookyRealmManager.decreaseModeofTokens
+	};
+	
+	//spooky keys
+	game.keybindings.register(cModuleName, "TogglePhantomRealm", {
+		name: Translate("Keys.TogglePhantomRealm.name"),
+		onDown: () => { game.settings.set(cModuleName, "spookyrealmactive", !game.settings.get(cModuleName, "spookyrealmactive")) },
+		restricted: false,
+		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+	});
+	
+	game.keybindings.register(cModuleName, "IncreaseModeSelected", {
+		name: Translate("Keys.IncreaseModeSelected.name"),
+		onDown: () => { SpookyRealmManager.increaseModeofTokens() },
+		restricted: false,
+		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+	});
+	
+	game.keybindings.register(cModuleName, "DecreaseModeSelected", {
+		name: Translate("Keys.DecreaseModeSelected.name"),
+		onDown: () => { SpookyRealmManager.decreaseModeofTokens() },
+		restricted: false,
+		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+	});
 });
 
 //the reason this file is so spooky is found in line 4, spooooky
