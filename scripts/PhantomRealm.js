@@ -279,6 +279,15 @@ Hooks.on("init", () => {
 		onChange : () => {SpookyRealmManager.updateSpookyVision(); SpookyRealmManager.updateSpookyIcon()}
 	}); 
 	
+	game.settings.register(cModuleName, "anchorpreventteleport", {
+		name: Translate("Settings.anchorpreventteleport.name"),
+		hint: Translate("Settings.anchorpreventteleport.descrp"),
+		scope: "world",
+		config: game.modules.get("stairways")?.active,
+		type: Boolean,
+		default: true
+	}); 
+	
 	game.modules.get(cModuleName).api = {
 		flags : SpookyFlags,
 		setModeofTokens : SpookyRealmManager.setModeofTokens,
@@ -307,6 +316,49 @@ Hooks.on("init", () => {
 		restricted: false,
 		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
 	});
+	
+	//compatibility with stairways
+	Hooks.on("PreStairwayTeleport", (pData) => {
+		if (!game.settings.get(cModuleName, "anchorpreventteleport")) return;
+		if (game.settings.get(cModuleName, "spookyrealmactive")) return;
+		
+		pData.selectedTokenIds = pData.selectedTokenIds.filter((vID) => {
+			let vToken = canvas.tokens.get(vID)?.document;
+			
+			if (vToken && SpookyFlags.getModeName(vToken) == "anchor") {
+				return false;
+			}
+			
+			return true;
+		})
+	});
+	
+	/*
+	//compatibility with MATT teleports
+	Hooks.on("preTriggerTile", (pTile, palsoTile, pTrigger, pInfos, pUserID, pData) => {
+		if (pInfos.action == "teleport" && pInfos.data.location.sceneId) {
+			if (!game.settings.get(cModuleName, "anchorpreventteleport")) return;
+			if (game.settings.get(cModuleName, "spookyrealmactive")) return;
+			
+			let v = pTrigger;
+			let vValidCopy = pTrigger.filter(vToken => !(SpookyFlags.getModeName(vToken) == "anchor"));
+			
+			for (let i = 0; i < vValidCopy.length; i++) {
+				pTrigger[i] = vValidCopy[i];
+			}
+			
+			while(pTrigger.length > vValidCopy.length) {
+				pTrigger.pop();
+			}
+			
+			pData.tokens = pData.tokens.filter(vToken => !(SpookyFlags.getModeName(vToken) == "anchor"));
+			
+			console.log(pData.tokens);
+			console.log(v);
+			console.log(pTrigger);
+		}
+	});
+	*/
 });
 
 //the reason this file is so spooky is found in line 4, spooooky

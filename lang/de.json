@@ -15,6 +15,13 @@
 			"TogglePhantomRealm.name"		: "Phantom Sicht umschalten",
 			"IncreaseModeSelected.name"		: "Phantom modus ausgewählter Figuren erhöhen",
 			"DecreaseModeSelected.name"		: "Phantom modus ausgewählter Figuren verringern"
+		},
+		
+		"Settings" : {
+			"anchorpreventteleport" : {
+				"name"						: "Verhindere Teleport von verankerten",
+				"descrp"					: "Hält verankerte Figuren davon ab Teleportiert zu werden (etwa durch stairways)"
+			}
 		}
 	}
 }

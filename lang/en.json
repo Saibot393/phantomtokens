@@ -15,6 +15,13 @@
 			"TogglePhantomRealm.name"		: "Toggle phantom vision",
 			"IncreaseModeSelected.name"		: "Increase phantom mode of selected tokens",
 			"DecreaseModeSelected.name"		: "Decrease phantom mode of selected tokens"
+		},
+		
+		"Settings" : {
+			"anchorpreventteleport" : {
+				"name"						: "Prevent anchored teleport",
+				"descrp"					: "Prevent anchored tokens from being teleported (using stairways)"
+			}
 		}
 	}
 }
