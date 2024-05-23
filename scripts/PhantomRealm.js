@@ -149,7 +149,12 @@ class SpookyRealmManager {
 	}
 	
 	static updateSpookyVision() {
-		canvas.tokens.activate();
+		if (canvas.tokens._activate) {
+			canvas.tokens._activate();
+		}
+		else {
+			canvas.tokens.activate();
+		}
 	}
 	
 	static updateSpookyIcon() {

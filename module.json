@@ -7,10 +7,10 @@
     "name": "saibot"
     }
   ],
-  "version": "1.2.0",
+  "version": "2.0.0",
   "compatibility": {
     "minimum": "10",
-    "verified": "11"
+    "verified": "12"
   },
   "socket": "true",
   "languages": [
@@ -31,7 +31,7 @@
 	"scripts/PhantomRealm.js"
   ],
   "url": "https://github.com/Saibot393/phantomtokens",
-  "download": "https://github.com/Saibot393/phantomtokens/archive/refs/tags/v1.2.0.zip",
+  "download": "https://github.com/Saibot393/phantomtokens/archive/refs/tags/v2.0.0.zip",
   "manifest": "https://github.com/Saibot393/phantomtokens/releases/latest/download/module.json",
   "readme": "https://github.com/Saibot393/phantomtokens/blob/main/README.md",
   "changelog": "https://github.com/Saibot393/phantomtokens/blob/main/CHANGELOG.md",
