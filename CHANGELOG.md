@@ -1,3 +1,6 @@
+## v2.0.0
+- v12 compatibility
+
 ## v1.2.0
 - Added setting to prevent anchored tokens from being teleported using [Stairways (Teleporter)](https://foundryvtt.com/packages/stairways)
 
