@@ -1,3 +1,6 @@
+## v2.1.1
+- Changed icon of "normal" token mode to prevent confusion
+
 ## v2.1.0
 - Improved mode updating
 - "Toggle phatom vision" is now a client setting
