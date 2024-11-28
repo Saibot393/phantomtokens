@@ -1,3 +1,7 @@
+## v2.1.0
+- Improved mode updating
+- "Toggle phatom vision" is now a client setting
+
 ## v2.0.0
 - v12 compatibility
 
