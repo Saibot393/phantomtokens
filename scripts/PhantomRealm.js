@@ -8,7 +8,7 @@ const cLibWrapper = "lib-wrapper";
 const cModes = ["normal", "anchor", "unclickable", "phantom"];
 
 const cIcons = {
-	normal: ["fa-solid", "fa-circle"],
+	normal: ["fa-solid", "fa-person"],
 	anchor: ["fa-solid", "fa-anchor"],
 	unclickable: ["fa-solid", "fa-computer-mouse"],
 	phantom: ["fa-solid", "fa-ghost"]
