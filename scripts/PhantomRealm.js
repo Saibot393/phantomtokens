@@ -148,13 +148,18 @@ class SpookyRealmManager {
 		}
 	}
 	
-	static updateSpookyVision() {
+	static updateSpookyVision(pForAll = true) {
+		console.log("updatingVision", pForAll);
 		if (canvas.tokens._activate) {
 			canvas.tokens._activate();
 		}
 		else {
 			canvas.tokens.activate();
 		}
+		
+		if (pForAll) {
+			game.socket.emit("module.phantomtokens", {pFunction : "updateSpookyVisionRequest", pData : {pSender : game.user.id}});
+		}	
 	}
 	
 	static updateSpookyIcon() {
@@ -269,6 +274,13 @@ class SpookyRealmManager {
 	}
 }
 
+function organiseSocketEvents({pFunction, pData} = {}) {
+	switch(pFunction) {
+		case "updateSpookyVisionRequest":
+			SpookyRealmManager.updateSpookyVision(false);
+	}
+}
+
 Hooks.on("renderSceneControls", (pApp, pHTML, pInfos) => {SpookyRealmManager.addSpookyRealmButton(pApp, pHTML, pInfos)});
 
 Hooks.on("renderTokenHUD", (pHUD, pHTML, pTokenData) => SpookyRealmManager.addSpookyTokenHUD(pHUD, pHTML, pTokenData));
@@ -277,11 +289,11 @@ Hooks.on("init", () => {
 	SpookyRealmManager.spookyPatches();
 	
 	game.settings.register(cModuleName, "spookyrealmactive", {
-		scope: "world",
+		scope: "client",
 		config: false,
 		type: Boolean,
 		default: false,
-		onChange : () => {SpookyRealmManager.updateSpookyVision(); SpookyRealmManager.updateSpookyIcon()}
+		onChange : () => {SpookyRealmManager.updateSpookyVision(false); SpookyRealmManager.updateSpookyIcon()}
 	}); 
 	
 	game.settings.register(cModuleName, "anchorpreventteleport", {
@@ -366,4 +378,5 @@ Hooks.on("init", () => {
 	*/
 });
 
+Hooks.once("ready", () => { game.socket.on("module.phantomtokens", organiseSocketEvents); });
 //the reason this file is so spooky is found in line 4, spooooky
