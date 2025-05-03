@@ -64,37 +64,51 @@ class SpookyFlags {
 class SpookyRealmManager {
 	static addSpookyRealmButton (pApp, pHTML, pInfos) {
 		if (game.user.isGM) {
-			let vButton = document.createElement("li");
-			vButton.classList.add("control-tool", "toggle");
-			vButton.setAttribute("data-tool", "spookyrealmtoggle");
-			vButton.setAttribute("role", "button");
-			vButton.setAttribute("data-tooltip", Translate("Titles." + "togglePhantomVision"));
-			
-			let vIcon = document.createElement("i");
-			vIcon.classList.add(...cModuleIcon);
-			
-			vButton.appendChild(vIcon);
-			
-			pHTML[0].querySelector(`[id="tools-panel-token"]`).appendChild(vButton);
-			
-			let vUpdateIcon = () => {
-				if (game.settings.get(cModuleName, "spookyrealmactive")) {
-					vButton.classList.add("active");
-				}
-				else {
-					vButton.classList.remove("active");
-				}
-			}
-			
-			this.SpookyIconupdate = vUpdateIcon;
-			
-			vButton.onclick = async (pEvent) => {
-				await game.settings.set(cModuleName, "spookyrealmactive", !game.settings.get(cModuleName, "spookyrealmactive"));
+			if (game.release.generation <= 12 || pApp.activeControl == "tokens") {
+				let vButton = document.createElement("li");
 				
-				//vUpdateIcon();
-			};
-			
-			vUpdateIcon();
+				let vtoAdd = vButton;
+				if (game.release.generation > 12) {
+					vtoAdd = vButton;
+					vButton = document.createElement("button");
+					vButton.classList.add("icon", "control", "ui-control");
+					vtoAdd.appendChild(vButton);
+				}
+				
+				vButton.classList.add("control-tool", "toggle");
+				vButton.setAttribute("data-tool", "spookyrealmtoggle");
+				vButton.setAttribute("role", "button");
+				vButton.setAttribute("data-tooltip", Translate("Titles." + "togglePhantomVision"));
+				
+				let vIcon = game.release.generation > 12 ? vButton : document.createElement("i");
+				vIcon.classList.add(...cModuleIcon);
+				
+				if (game.release.generation <= 12) vButton.appendChild(vIcon);
+				
+				if (game.release.generation <= 12) pHTML[0].querySelector(`[id="tools-panel-token"]`).appendChild(vtoAdd)
+				else pHTML.querySelector(`[id="scene-controls-tools"]`).appendChild(vtoAdd)
+				
+				let vUpdateIcon = () => {
+					if (game.settings.get(cModuleName, "spookyrealmactive")) {
+						vButton.classList.add("active");
+						vButton.setAttribute("aria-pressed", "true");
+					}
+					else {
+						vButton.classList.remove("active");
+						vButton.setAttribute("aria-pressed", "false");
+					}
+				}
+				
+				this.SpookyIconupdate = vUpdateIcon;
+				
+				vButton.onclick = async (pEvent) => {
+					await game.settings.set(cModuleName, "spookyrealmactive", !game.settings.get(cModuleName, "spookyrealmactive"));
+					
+					//vUpdateIcon();
+				};
+				
+				vUpdateIcon();
+			}
 		}
 	}
 	
@@ -104,7 +118,7 @@ class SpookyRealmManager {
 		if (vToken) {
 			if (game.settings.get(cModuleName, "spookyrealmactive") || (SpookyFlags.getModeName(vToken) != "normal")) {
 				if (game.user.isGM) {
-					let vButton =  document.createElement("div");
+					let vButton =  document.createElement(game.release.generation <= 12 ? "div" : "button");
 					vButton.classList.add("control-icon");
 					vButton.setAttribute("data-action", "changePahntomMode");
 					
@@ -140,7 +154,8 @@ class SpookyRealmManager {
 						}
 					}
 					
-					pHTML[0].querySelector("div.col.right").prepend(vButton);
+					if (game.release.generation <= 12) pHTML[0].querySelector("div.col.right").prepend(vButton)
+					else pHTML.querySelector("div.col.right").prepend(vButton)
 					
 					vUpdateIcon();
 				}
