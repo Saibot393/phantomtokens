@@ -1,3 +1,6 @@
+## v3.0.0
+- v13 compatibility
+
 ## v2.1.1
 - Changed icon of "normal" token mode to prevent confusion
 
