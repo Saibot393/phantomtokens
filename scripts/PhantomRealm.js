@@ -395,3 +395,25 @@ Hooks.on("init", () => {
 
 Hooks.once("ready", () => { game.socket.on("module.phantomtokens", organiseSocketEvents); });
 //the reason this file is so spooky is found in line 4, spooooky
+
+Hooks.on("updateActor", (pActor) => {
+	if (game.settings.get(cModuleName, "PhantomonDeath")) {
+		if (pActor.isDead && pActor.type == "npc") {
+			let vTokens = canvas.tokens.placeables.filter(vToken => vToken.actor == pActor).map(vToken => vToken.document);
+			
+			SpookyRealmManager.setModeofTokens("phantom", vTokens);
+		}
+	}
+});
+
+Hooks.once("init", () => {
+	game.settings.register(cModuleName, "PhantomonDeath", {
+		name: Translate("Settings.PhantomonDeath.name"),
+		hint: Translate("Settings.PhantomonDeath.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false,
+		requiresReload: false
+	}); 
+});
