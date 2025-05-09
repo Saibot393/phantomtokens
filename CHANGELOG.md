@@ -1,3 +1,6 @@
+## v3.1.0
+- Added setting "Phantom on death"
+
 ## v3.0.0
 - v13 compatibility
 
