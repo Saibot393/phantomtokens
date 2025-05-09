@@ -21,6 +21,11 @@
 			"anchorpreventteleport" : {
 				"name"						: "Verhindere Teleport von verankerten",
 				"descrp"					: "Hält verankerte Figuren davon ab Teleportiert zu werden (etwa durch stairways)"
+			},
+			
+			"PhantomonDeath" : {
+				"name"						: "Phantom bei Tod",
+				"descrp"					: "Schiebe NSC Figuren in den Phantommodus wenn sie sterben"
 			}
 		}
 	}

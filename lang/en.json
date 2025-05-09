@@ -21,6 +21,11 @@
 			"anchorpreventteleport" : {
 				"name"						: "Prevent anchored teleport",
 				"descrp"					: "Prevent anchored tokens from being teleported (using stairways)"
+			},
+			
+			"PhantomonDeath" : {
+				"name"						: "Phantom on death",
+				"descrp"					: "Shift NPC tokens into the phantom mode when dying"
 			}
 		}
 	}
