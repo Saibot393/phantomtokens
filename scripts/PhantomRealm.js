@@ -1,7 +1,7 @@
 //spooooky
 const cModuleName = "phantomtokens"
 
-const cModuleIcon = ["fa-solid", "fa-ghost"];
+const cModuleIcon = ["fa-solid", "fa-crow"];
 
 const cLibWrapper = "lib-wrapper";
 
@@ -163,8 +163,15 @@ class SpookyRealmManager {
 		}
 	}
 	
+	static onTokenHover(pToken, pInfos) {
+		if (!game.settings.get(cModuleName, "spookyrealmactive")) {
+			if (SpookyFlags.getModeName(pToken.document) == "unclickable") {
+				pToken.cursor = "default";
+			}
+		}
+	}
+	
 	static updateSpookyVision(pForAll = true) {
-		console.log("updatingVision", pForAll);
 		if (canvas.tokens._activate) {
 			canvas.tokens._activate();
 		}
@@ -296,9 +303,11 @@ function organiseSocketEvents({pFunction, pData} = {}) {
 	}
 }
 
-Hooks.on("renderSceneControls", (pApp, pHTML, pInfos) => {SpookyRealmManager.addSpookyRealmButton(pApp, pHTML, pInfos)});
+Hooks.on("renderSceneControls", (pApp, pHTML, pInfos) => SpookyRealmManager.addSpookyRealmButton(pApp, pHTML, pInfos));
 
 Hooks.on("renderTokenHUD", (pHUD, pHTML, pTokenData) => SpookyRealmManager.addSpookyTokenHUD(pHUD, pHTML, pTokenData));
+
+Hooks.on("refreshToken", (pToken, pInfos) => SpookyRealmManager.onTokenHover(pToken, pInfos));
 
 Hooks.on("init", () => {
 	SpookyRealmManager.spookyPatches();
@@ -391,6 +400,9 @@ Hooks.on("init", () => {
 		}
 	});
 	*/
+	
+	//lib wrap to do:
+	//let vOldRefresh = Token.prototype._refreshState;
 });
 
 Hooks.once("ready", () => { game.socket.on("module.phantomtokens", organiseSocketEvents); });
