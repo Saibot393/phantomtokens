@@ -1,3 +1,8 @@
+## v4.0.0
+- v14 compatibility
+- Replaced token on the left tool bar with a crow (reference to psychopomps) to prevent confusion with "Unconstrained Movement" button
+- When hovering unclickable tokens, the cursor will no longer change
+
 ## v3.1.0
 - Added setting "Phantom on death"
 
